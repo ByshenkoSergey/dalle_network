@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { preview } from '../assets';
 import { getRandomPrompt } from '../utils';
 import { FormField, Loader } from '../components';
+import config from '../config/config';
 
 
 const CreatePost = () => {
@@ -23,7 +24,7 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
 
-        const traslateResult = await fetch('http://localhost:8080/api/v1/translate', {
+        const traslateResult = await fetch(`${config.backendUrl}/translate`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -35,18 +36,18 @@ const CreatePost = () => {
 
         const tranlateData = await traslateResult.json();
 
-        // const response = await fetch('http://localhost:8080/api/v1/dalle', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     prompt: tranlateData.data,
-        //   }),
-        // });
+        const response = await fetch(`${config.backendUrl}/dalle`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: tranlateData.data,
+          }),
+        });
         
-        // const data = await response.json();
-        // setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+        const data = await response.json();
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
         } catch (err) {
           alert(err);
         } finally {
@@ -69,7 +70,7 @@ const CreatePost = () => {
     if (form.prompt && form.photo) {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/v1/post', {
+        const response = await fetch(`${config.backendUrl}/post`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
