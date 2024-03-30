@@ -24,25 +24,13 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
 
-        const traslateResult = await fetch(`${config.backendUrl}/translate`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: form.prompt,
-          }),
-        });
-
-        const tranlateData = await traslateResult.json();
-
         const response = await fetch(`${config.backendUrl}/dalle`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            prompt: tranlateData.data,
+            prompt: form.prompt,
           }),
         });
         
